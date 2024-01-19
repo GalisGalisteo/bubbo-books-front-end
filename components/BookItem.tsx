@@ -7,7 +7,7 @@ export interface Book {
   id: string;
 }
 
-type PressHandlerType = (item: Book) => void;
+type PressHandlerType = (id: string) => void;
 
 export interface ItemProps {
   item: Book;
@@ -16,7 +16,7 @@ export interface ItemProps {
 
 export const BookItem = ({ item, pressHandler }: ItemProps) => {
   return (
-    <TouchableOpacity onPress={() => pressHandler(item)}>
+    <TouchableOpacity onPress={() => pressHandler(item.id)}>
       <View style={styles.item}>
         <Image
           source={{

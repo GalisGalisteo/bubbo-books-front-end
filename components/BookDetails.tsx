@@ -1,21 +1,47 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Book } from "./BookItem";
 import { Fontisto } from "@expo/vector-icons";
 
 interface BookDetailsProps {
-  selectedBook: Book | null;
+  selectedBookId: string | null;
   onClose: () => void;
 }
 
-export const BookDetails = ({ selectedBook, onClose }: BookDetailsProps) => {
-  // const [bookDetails, setBookDetails] = useState(null);
+export const BookDetails = ({ selectedBookId, onClose }: BookDetailsProps) => {
+  const [bookDetails, setBookDetails] = useState<null | Book>(null);
 
-  if (!selectedBook) {
+  const fetchBookDetails = async (id: string) => {
+    try {
+      const res = await fetch(
+        `https://us-central1-bubbo-88234.cloudfunctions.net/app/books/${id}`
+      );
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! Status: ${res.status}`);
+      }
+
+      const data: Book = await res.json();
+      setBookDetails(data);
+      console.log(data);
+    } catch (error) {
+      console.error("Error fetching books:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedBookId) {
+      fetchBookDetails(selectedBookId);
+    }
+  }, [selectedBookId]);
+
+  if (!bookDetails) {
     return;
   }
-  const { id, author, title } = selectedBook;
+
+  const { id, author, title } = bookDetails;
+
   return (
     <View style={styles.item}>
       <TouchableOpacity onPress={onClose}>
@@ -44,7 +70,6 @@ const styles = StyleSheet.create({
     gap: 10,
     padding: 16,
     marginTop: 80,
-
   },
   image: {
     width: 300,

@@ -5,26 +5,27 @@ import { BookDetails } from "./BookDetails";
 
 export const BooksList = () => {
   const [books, setBooks] = useState([]);
-  const [selectedBook, setSelectedBook] = useState<null | Book>(null);
+  const [selectedBookId, setSelectedBookId] = useState<null | string>(null);
 
-  const fetchBooks = () => {
-    fetch("https://us-central1-bubbo-88234.cloudfunctions.net/app/books")
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`HTTP error! Status: ${res.status}`);
-        }
-        return res.json();
-      })
-      .then((data) => {
-        setBooks(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching books:", error);
-      });
+  const fetchBooks = async () => {
+    try {
+      const res = await fetch(
+        "https://us-central1-bubbo-88234.cloudfunctions.net/app/books"
+      );
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! Status: ${res.status}`);
+      }
+
+      const data = await res.json();
+      setBooks(data);
+    } catch (error) {
+      console.error("Error fetching books:", error);
+    }
   };
 
-  const pressHandler = (item: Book) => {
-    setSelectedBook(item);
+  const pressHandler = (id: string) => {
+    setSelectedBookId(id);
   };
 
   useEffect(() => {
@@ -40,10 +41,10 @@ export const BooksList = () => {
           )}
         />
       </View>
-      <Modal visible={selectedBook !== null}>
+      <Modal visible={selectedBookId !== null}>
         <BookDetails
-          selectedBook={selectedBook}
-          onClose={() => setSelectedBook(null)}
+          selectedBookId={selectedBookId}
+          onClose={() => setSelectedBookId(null)}
         />
       </Modal>
     </View>
