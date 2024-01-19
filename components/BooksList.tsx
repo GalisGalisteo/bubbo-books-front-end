@@ -10,17 +10,17 @@ export const BooksList = () => {
   const fetchBooks = async () => {
     try {
       const res = await fetch(
-        "https://us-central1-bubbo-88234.cloudfunctions.net/app/books"
+        "https://us-central1-bubbo-88234.cloudfunctions.net/app/books",
+        { method: "GET" }
       );
-
-      if (!res.ok) {
-        throw new Error(`HTTP error! Status: ${res.status}`);
+      if (res.ok) {
+        const response = await res.json();
+        setBooks(response.data);
+      } else {
+        console.error("Error fetching books");
       }
-
-      const data = await res.json();
-      setBooks(data);
     } catch (error) {
-      console.error("Error fetching books:", error);
+      console.error("An error ocurred: ", error);
     }
   };
 
@@ -45,6 +45,7 @@ export const BooksList = () => {
         <BookDetails
           selectedBookId={selectedBookId}
           onClose={() => setSelectedBookId(null)}
+          setSelectedBookId={() => setSelectedBookId(null)}
         />
       </Modal>
     </View>
