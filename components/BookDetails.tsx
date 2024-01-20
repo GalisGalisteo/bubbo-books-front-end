@@ -132,6 +132,7 @@ export const BookDetails = ({
           isbn,
         }}
         isEditable={editable}
+        setIsEditable={setEditable}
       />
 
       {!editable ? (
@@ -159,11 +160,7 @@ export const BookDetails = ({
             }}
           />
         </View>
-      ) : (
-        <View>
-          <Button title="Submit" onPress={() => {}} />
-        </View>
-      )}
+      ) : null}
     </View>
   );
 };

@@ -6,28 +6,16 @@ import { BookDetails } from "./BookDetails";
 interface BookFormProps {
   bookDetails: BookDetails;
   isEditable: boolean;
+  setIsEditable: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const BookForm = ({ bookDetails, isEditable }: BookFormProps) => {
-  //   const [inputs, setInputs] = useState({
-  //     author: "",
-  //     title: "",
-  //     summary: "",
-  //     yearPublished: "",
-  //     genre: "",
-  //     isbn: "",
-  //   });
-
-  //   const updateInput = (name: string, value: string) => {
-  //     setInputs((prevInputs) => ({
-  //       ...prevInputs,
-  //       [name]: value,
-  //     }));
-  //   };
-
+export const BookForm = ({
+  bookDetails,
+  isEditable,
+  setIsEditable,
+}: BookFormProps) => {
   const { id, author, title, summary, yearPublished, genre, isbn } =
     bookDetails;
-  // console.log("bookDetails BookForm", bookDetails.id);
 
   const initialValues = {
     author: author,
@@ -53,11 +41,8 @@ export const BookForm = ({ bookDetails, isEditable }: BookFormProps) => {
           },
         }
       );
-      console.log("INSIDE FETCH", data);
       if (res.ok) {
         const responseData = await res.json();
-        console.log("INSIDE FETCH response data", responseData);
-
         return responseData;
       } else {
         console.error("Error updating book");
@@ -73,7 +58,7 @@ export const BookForm = ({ bookDetails, isEditable }: BookFormProps) => {
         initialValues={initialValues}
         onSubmit={(values) => {
           handleUpdateBook(id, values);
-          console.log(values);
+          setIsEditable(false);
         }}
       >
         {({ handleChange, values, handleSubmit }) => (
@@ -138,9 +123,16 @@ export const BookForm = ({ bookDetails, isEditable }: BookFormProps) => {
                 value={values.isbn}
               />
             </View>
-            <View>
-              <Button title="Submit" onPress={() => handleSubmit()} />
-            </View>
+            {isEditable ? (
+              <View>
+                <Button
+                  title="Submit"
+                  onPress={() => {
+                    handleSubmit();
+                  }}
+                />
+              </View>
+            ) : null}
           </View>
         )}
       </Formik>
