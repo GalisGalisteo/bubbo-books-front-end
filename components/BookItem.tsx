@@ -2,9 +2,9 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 
 export interface Book {
+  id: string;
   author: string;
   title: string;
-  id: string;
 }
 
 type PressHandlerType = (id: string) => void;

@@ -12,17 +12,6 @@ import { AntDesign } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { Book } from "./BookItem";
 import { Fontisto } from "@expo/vector-icons";
-import { BookForm } from "./BookForm";
-
-export interface BookDetails {
-  id?: string;
-  author: string;
-  title: string;
-  summary: string;
-  yearPublished: string;
-  genre: string;
-  isbn: string;
-}
 
 interface BookDetailsProps {
   selectedBookId: string | null;
@@ -38,21 +27,21 @@ export const BookDetails = ({
   const [bookDetails, setBookDetails] = useState<null | BookDetails>(null);
   const [editable, setEditable] = useState(false);
 
-  //   const [inputs, setInputs] = useState({
-  //     author: "",
-  //     title: "",
-  //     summary: "",
-  //     yearPublished: "",
-  //     genre: "",
-  //     isbn: "",
-  //   });
+  const [inputs, setInputs] = useState({
+    author: "",
+    title: "",
+    summary: "",
+    yearPublished: "",
+    genre: "",
+    isbn: "",
+  });
 
-  //   const updateInput = (name: string, value: string) => {
-  //     setInputs((prevInputs) => ({
-  //       ...prevInputs,
-  //       [name]: value,
-  //     }));
-  //   };
+  const updateInput = (name: string, value: string) => {
+    setInputs((prevInputs) => ({
+      ...prevInputs,
+      [name]: value,
+    }));
+  };
 
   //   const [inputAuthor, setInputAuthor] = useState("");
   //   const [inputTitle, setInputTitle] = useState("");
@@ -103,8 +92,7 @@ export const BookDetails = ({
     return;
   }
 
-  const { id, author, title, summary, yearPublished, genre, isbn } =
-    bookDetails;
+  const { author, title, summary, yearPublished, genre, isbn } = bookDetails;
 
   return (
     <View style={styles.item}>
@@ -118,18 +106,72 @@ export const BookDetails = ({
         }}
         style={styles.image}
       />
-      <BookForm
-        bookDetails={{
-          id,
-          author,
-          title,
-          summary,
-          yearPublished,
-          genre,
-          isbn,
-        }}
-        isEditable={editable}
-      />
+      <View style={styles.inputContainer}>
+        <Text style={styles.inputTitle}>Author: </Text>
+        <TextInput
+          editable={editable}
+          style={isEditable(editable)}
+          defaultValue={author}
+          onChangeText={(input) => {
+            updateInput("author", input);
+          }}
+        />
+      </View>
+      <View style={styles.inputContainer}>
+        <Text style={styles.inputTitle}>Title: </Text>
+        <TextInput
+          editable={editable}
+          style={isEditable(editable)}
+          defaultValue={title}
+          onChangeText={(input) => {
+            updateInput("title", input);
+          }}
+        />
+      </View>
+      <View style={styles.inputContainer}>
+        <Text style={styles.inputTitle}>Summary: </Text>
+        <TextInput
+          editable={editable}
+          style={isEditable(editable)}
+          defaultValue={summary}
+          onChangeText={(input) => {
+            updateInput("summary", input);
+          }}
+        />
+      </View>
+      <View style={styles.inputContainer}>
+        <Text style={styles.inputTitle}>Year published: </Text>
+        <TextInput
+          editable={editable}
+          style={isEditable(editable)}
+          defaultValue={yearPublished}
+          onChangeText={(input) => {
+            updateInput("yearPublished", input);
+          }}
+        />
+      </View>
+      <View style={styles.inputContainer}>
+        <Text style={styles.inputTitle}>Genre: </Text>
+        <TextInput
+          editable={editable}
+          style={isEditable(editable)}
+          defaultValue={genre}
+          onChangeText={(input) => {
+            updateInput("genre", input);
+          }}
+        />
+      </View>
+      <View style={styles.inputContainer}>
+        <Text style={styles.inputTitle}>ISBN: </Text>
+        <TextInput
+          editable={editable}
+          style={isEditable(editable)}
+          defaultValue={isbn}
+          onChangeText={(input) => {
+            updateInput("isbn", input);
+          }}
+        />
+      </View>
 
       {!editable ? (
         <View style={{ flexDirection: "row" }}>
@@ -176,27 +218,27 @@ const styles = StyleSheet.create({
     width: 300,
     height: 300,
   },
-  //   inputContainer: {
-  //     flexDirection: "row",
-  //     alignItems: "center",
-  //   },
-  //   inputTitle: {
-  //     fontSize: 18,
-  //   },
-  //   inputText: {
-  //     borderRadius: 10,
-  //     padding: 8,
-  //     width: "auto",
-  //     fontSize: 18,
-  //   },
-  //   borderEditable: {
-  //     borderWidth: 1,
-  //     borderColor: "#999",
-  //   },
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  inputTitle: {
+    fontSize: 18,
+  },
+  inputText: {
+    borderRadius: 10,
+    padding: 8,
+    width: "auto",
+    fontSize: 18,
+  },
+  borderEditable: {
+    borderWidth: 1,
+    borderColor: "#999",
+  },
 });
 
-// const isEditable = (editable: boolean) => {
-//   return editable
-//     ? [styles.inputText, styles.borderEditable]
-//     : [styles.inputText];
-// };
+const isEditable = (editable: boolean) => {
+  return editable
+    ? [styles.inputText, styles.borderEditable]
+    : [styles.inputText];
+};
