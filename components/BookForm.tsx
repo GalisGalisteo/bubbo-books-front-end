@@ -4,9 +4,9 @@ import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 import { BookDetails } from "./BookDetails";
 
 interface BookFormProps {
-  bookDetails: BookDetails;
+  bookDetails: BookDetails | null;
   isEditable: boolean;
-  setIsEditable: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsEditable: React.Dispatch<React.SetStateAction<boolean>> | null;
 }
 
 export const BookForm = ({
@@ -15,15 +15,15 @@ export const BookForm = ({
   setIsEditable,
 }: BookFormProps) => {
   const { id, author, title, summary, yearPublished, genre, isbn } =
-    bookDetails;
+    bookDetails || {};
 
   const initialValues = {
-    author: author,
-    title: title,
-    summary: summary,
-    yearPublished: yearPublished,
-    genre: genre,
-    isbn: isbn,
+    author: author ?? "",
+    title: title ?? "",
+    summary: summary ?? "",
+    yearPublished: yearPublished ?? "",
+    genre: genre ?? "",
+    isbn: isbn ?? "",
   };
 
   const handleUpdateBook = async (
@@ -58,7 +58,10 @@ export const BookForm = ({
         initialValues={initialValues}
         onSubmit={(values) => {
           handleUpdateBook(id, values);
-          setIsEditable(false);
+          if (setIsEditable) {
+            setIsEditable(false);
+          }
+          console.log(values);
         }}
       >
         {({ handleChange, values, handleSubmit }) => (
