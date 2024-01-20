@@ -27,9 +27,9 @@ export const BookForm = ({ bookDetails, isEditable }: BookFormProps) => {
 
   const { id, author, title, summary, yearPublished, genre, isbn } =
     bookDetails;
+  // console.log("bookDetails BookForm", bookDetails.id);
 
   const initialValues = {
-    id: id,
     author: author,
     title: title,
     summary: summary,

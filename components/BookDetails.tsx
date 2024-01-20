@@ -68,6 +68,7 @@ export const BookDetails = ({
       if (res.ok) {
         const response = await res.json();
         setBookDetails(response.data);
+        // console.log("response.data", response.data.id);
       } else {
         console.error("Error fetching book");
       }
@@ -105,6 +106,8 @@ export const BookDetails = ({
 
   const { id, author, title, summary, yearPublished, genre, isbn } =
     bookDetails;
+
+  // console.log("bookDetails", bookDetails.id);
 
   return (
     <View style={styles.item}>
