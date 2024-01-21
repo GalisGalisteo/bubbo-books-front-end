@@ -22,53 +22,31 @@ export interface BookDetails {
   yearPublished: string;
   genre: string;
   isbn: string;
+  image?: string;
 }
 
 interface BookDetailsProps {
   selectedBookId: string | null;
-  onClose: () => void;
-  setSelectedBookId: () => void;
+  setSelectedBookId: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 export const BookDetails = ({
   selectedBookId,
-  onClose,
   setSelectedBookId,
 }: BookDetailsProps) => {
   const [bookDetails, setBookDetails] = useState<null | BookDetails>(null);
   const [editable, setEditable] = useState(false);
 
-  //   const [inputs, setInputs] = useState({
-  //     author: "",
-  //     title: "",
-  //     summary: "",
-  //     yearPublished: "",
-  //     genre: "",
-  //     isbn: "",
-  //   });
-
-  //   const updateInput = (name: string, value: string) => {
-  //     setInputs((prevInputs) => ({
-  //       ...prevInputs,
-  //       [name]: value,
-  //     }));
-  //   };
-
-  //   const [inputAuthor, setInputAuthor] = useState("");
-  //   const [inputTitle, setInputTitle] = useState("");
-  //   const [inputSummary, setInputSummary] = useState("");
-  //   const [inputYearPublished, setInputYearPublished] = useState("");
-
   const fetchBookDetails = async (id: string | null) => {
     try {
-      const res = await fetch(
+      const response = await fetch(
         `https://us-central1-bubbo-88234.cloudfunctions.net/app/books/${id}`,
         { method: "GET" }
       );
-      if (res.ok) {
-        const response = await res.json();
-        setBookDetails(response.data);
-        // console.log("response.data", response.data.id);
+      if (response.ok) {
+        const responseData = await response.json();
+        setBookDetails(responseData.data);
+        console.log("fetching fetchBookDetails");
       } else {
         console.error("Error fetching book");
       }
@@ -79,13 +57,14 @@ export const BookDetails = ({
 
   const handleDeleteBook = async (id: string | null) => {
     try {
-      const res = await fetch(
+      const response = await fetch(
         `https://us-central1-bubbo-88234.cloudfunctions.net/app/books/${id}`,
         { method: "DELETE" }
       );
-      if (res.ok) {
-        const response = await res.json();
-        console.log(response);
+      if (response.ok) {
+        const responseData = await response.json();
+        console.log(responseData);
+        console.log("fetching handleDeleteBook");
       } else {
         console.error("Error deleting book");
       }
@@ -104,20 +83,18 @@ export const BookDetails = ({
     return;
   }
 
-  const { id, author, title, summary, yearPublished, genre, isbn } =
+  const { id, author, title, summary, yearPublished, genre, isbn, image } =
     bookDetails;
-
-  // console.log("bookDetails", bookDetails.id);
 
   return (
     <View style={styles.item}>
-      <TouchableOpacity onPress={onClose}>
+      <TouchableOpacity onPress={() => setSelectedBookId(null)}>
         <Fontisto name="close-a" size={24} color="black" />
       </TouchableOpacity>
       <Text style={{ fontSize: 40 }}>{title}</Text>
       <Image
         source={{
-          uri: "https://www.cwhaydenonline.com/media/wysiwyg/red_button_new_customer.png",
+          uri: image,
         }}
         style={styles.image}
       />
@@ -144,9 +121,9 @@ export const BookDetails = ({
               Alert.alert("Deleting Book", "Are you sure you want to delete?", [
                 {
                   text: "Yes",
-                  onPress: () => {
-                    handleDeleteBook(selectedBookId);
-                    setSelectedBookId();
+                  onPress: async () => {
+                    await handleDeleteBook(selectedBookId);
+                    setSelectedBookId(null);
                   },
                 },
                 {
@@ -176,27 +153,4 @@ const styles = StyleSheet.create({
     width: 300,
     height: 300,
   },
-  //   inputContainer: {
-  //     flexDirection: "row",
-  //     alignItems: "center",
-  //   },
-  //   inputTitle: {
-  //     fontSize: 18,
-  //   },
-  //   inputText: {
-  //     borderRadius: 10,
-  //     padding: 8,
-  //     width: "auto",
-  //     fontSize: 18,
-  //   },
-  //   borderEditable: {
-  //     borderWidth: 1,
-  //     borderColor: "#999",
-  //   },
 });
-
-// const isEditable = (editable: boolean) => {
-//   return editable
-//     ? [styles.inputText, styles.borderEditable]
-//     : [styles.inputText];
-// };

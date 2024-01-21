@@ -3,9 +3,14 @@ import { FlatList, Modal, StyleSheet, Text, View } from "react-native";
 import { Book, BookItem, ItemProps } from "./BookItem";
 import { BookDetails } from "./BookDetails";
 
-export const BooksList = () => {
+interface BookListProps {
+  fetchBookList: boolean;
+}
+
+export const BooksList = ({ fetchBookList }: BookListProps) => {
   const [books, setBooks] = useState([]);
   const [selectedBookId, setSelectedBookId] = useState<null | string>(null);
+  console.log(selectedBookId);
 
   const fetchBooks = async () => {
     try {
@@ -16,6 +21,7 @@ export const BooksList = () => {
       if (res.ok) {
         const response = await res.json();
         setBooks(response.data);
+        console.log("fetching fetchBooks");
       } else {
         console.error("Error fetching books");
       }
@@ -30,7 +36,8 @@ export const BooksList = () => {
 
   useEffect(() => {
     fetchBooks();
-  });
+  }, [selectedBookId, fetchBookList]);
+
   return (
     <View>
       <View>
@@ -44,8 +51,7 @@ export const BooksList = () => {
       <Modal visible={selectedBookId !== null}>
         <BookDetails
           selectedBookId={selectedBookId}
-          onClose={() => setSelectedBookId(null)}
-          setSelectedBookId={() => setSelectedBookId(null)}
+          setSelectedBookId={setSelectedBookId}
         />
       </Modal>
     </View>

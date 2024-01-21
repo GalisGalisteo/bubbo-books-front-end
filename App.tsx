@@ -4,9 +4,11 @@ import { Header } from "./components/Header";
 import { BooksList } from "./components/BooksList";
 import { BookForm } from "./components/BookForm";
 import { useState } from "react";
+import { Overlay } from "./components/Overlay";
+import { AddBook } from "./components/AddBook";
 
 export default function App() {
-  const [isModalVisible, setModalVisible] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   return (
     <View style={styles.container}>
@@ -14,14 +16,14 @@ export default function App() {
       <Button
         title="Add Book"
         onPress={() => {
-          setModalVisible(true);
+          setIsModalVisible(true);
         }}
       />
-      <Modal visible={isModalVisible}>
-        <BookForm bookDetails={null} isEditable={true} setIsEditable={null} />
+      <Modal visible={isModalVisible} transparent animationType="slide">
+        <AddBook setIsModalVisible={setIsModalVisible} />
       </Modal>
       <View>
-        <BooksList />
+        <BooksList fetchBookList={!isModalVisible} />
       </View>
       <StatusBar style="auto" />
     </View>

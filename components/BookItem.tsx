@@ -5,6 +5,7 @@ export interface Book {
   id: string;
   author: string;
   title: string;
+  image: string;
 }
 
 type PressHandlerType = (id: string) => void;
@@ -20,7 +21,7 @@ export const BookItem = ({ item, pressHandler }: ItemProps) => {
       <View style={styles.item}>
         <Image
           source={{
-            uri: "https://www.cwhaydenonline.com/media/wysiwyg/red_button_new_customer.png",
+            uri: item.image,
           }}
           style={styles.image}
         />

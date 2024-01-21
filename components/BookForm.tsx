@@ -26,12 +26,35 @@ export const BookForm = ({
     isbn: isbn ?? "",
   };
 
+  const handleAddBook = async (data: BookDetails) => {
+    try {
+      const response = await fetch(
+        `https://us-central1-bubbo-88234.cloudfunctions.net/app/books/`,
+        {
+          method: "POST",
+          body: JSON.stringify(data),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (response.ok) {
+        const responseData = await response.json();
+        console.log("fetching handleAddBook");
+        return responseData;
+      } else {
+        console.error("Error adding book");
+      }
+    } catch (error) {
+      console.error("An error ocurred: ", error);
+    }
+  };
   const handleUpdateBook = async (
     id: string | undefined,
     data: BookDetails
   ) => {
     try {
-      const res = await fetch(
+      const response = await fetch(
         `https://us-central1-bubbo-88234.cloudfunctions.net/app/books/${id}`,
         {
           method: "PUT",
@@ -41,8 +64,9 @@ export const BookForm = ({
           },
         }
       );
-      if (res.ok) {
-        const responseData = await res.json();
+      if (response.ok) {
+        const responseData = await response.json();
+        console.log("fetching handleUpdateBook");
         return responseData;
       } else {
         console.error("Error updating book");
@@ -57,11 +81,15 @@ export const BookForm = ({
       <Formik
         initialValues={initialValues}
         onSubmit={(values) => {
-          handleUpdateBook(id, values);
+          if (bookDetails) {
+            handleUpdateBook(id, values);
+          } else {
+            handleAddBook(values);
+            console.log(values);
+          }
           if (setIsEditable) {
             setIsEditable(false);
           }
-          console.log(values);
         }}
       >
         {({ handleChange, values, handleSubmit }) => (
