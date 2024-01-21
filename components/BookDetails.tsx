@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { Book } from "./BookItem";
 import { Fontisto } from "@expo/vector-icons";
 import { BookForm } from "./BookForm";
+import { fetchBookById, fetchDeleteBook } from "../services";
 
 export interface BookDetails {
   id?: string;
@@ -39,10 +40,7 @@ export const BookDetails = ({
 
   const fetchBookDetails = async (id: string | null) => {
     try {
-      const response = await fetch(
-        `https://us-central1-bubbo-88234.cloudfunctions.net/app/books/${id}`,
-        { method: "GET" }
-      );
+      const response = await fetchBookById(id);
       if (response.ok) {
         const responseData = await response.json();
         setBookDetails(responseData.data);
@@ -57,10 +55,7 @@ export const BookDetails = ({
 
   const handleDeleteBook = async (id: string | null) => {
     try {
-      const response = await fetch(
-        `https://us-central1-bubbo-88234.cloudfunctions.net/app/books/${id}`,
-        { method: "DELETE" }
-      );
+      const response = await fetchDeleteBook(id);
       if (response.ok) {
         const responseData = await response.json();
         console.log(responseData);
@@ -110,6 +105,7 @@ export const BookDetails = ({
         }}
         isEditable={editable}
         setIsEditable={setEditable}
+        setIsModalVisible={null}
       />
 
       {!editable ? (

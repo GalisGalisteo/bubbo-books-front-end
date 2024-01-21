@@ -1,18 +1,29 @@
-import { useEffect, useState } from "react";
 import { Formik } from "formik";
 import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 import { BookDetails } from "./BookDetails";
+import { fetchAddBook, fetchUpdateBook } from "../services";
 
 interface BookFormProps {
   bookDetails: BookDetails | null;
   isEditable: boolean;
   setIsEditable: React.Dispatch<React.SetStateAction<boolean>> | null;
+  setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>> | null;
+}
+
+interface Values {
+  author: string;
+  title: string;
+  summary: string;
+  yearPublished: string;
+  genre: string;
+  isbn: string;
 }
 
 export const BookForm = ({
   bookDetails,
   isEditable,
   setIsEditable,
+  setIsModalVisible,
 }: BookFormProps) => {
   const { id, author, title, summary, yearPublished, genre, isbn } =
     bookDetails || {};
@@ -28,16 +39,7 @@ export const BookForm = ({
 
   const handleAddBook = async (data: BookDetails) => {
     try {
-      const response = await fetch(
-        `https://us-central1-bubbo-88234.cloudfunctions.net/app/books/`,
-        {
-          method: "POST",
-          body: JSON.stringify(data),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetchAddBook(data);
       if (response.ok) {
         const responseData = await response.json();
         console.log("fetching handleAddBook");
@@ -54,16 +56,7 @@ export const BookForm = ({
     data: BookDetails
   ) => {
     try {
-      const response = await fetch(
-        `https://us-central1-bubbo-88234.cloudfunctions.net/app/books/${id}`,
-        {
-          method: "PUT",
-          body: JSON.stringify(data),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetchUpdateBook(id, data);
       if (response.ok) {
         const responseData = await response.json();
         console.log("fetching handleUpdateBook");
@@ -76,21 +69,31 @@ export const BookForm = ({
     }
   };
 
+  const handleOnSubmit = async (values: Values) => {
+    try {
+      if (bookDetails) {
+        await handleUpdateBook(id, values);
+      } else {
+        await handleAddBook(values);
+        console.log(values);
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+    } finally {
+      if (setIsEditable) {
+        setIsEditable(false);
+      }
+      if (setIsModalVisible) {
+        setIsModalVisible(false);
+      }
+    }
+  };
+
   return (
     <View>
       <Formik
         initialValues={initialValues}
-        onSubmit={(values) => {
-          if (bookDetails) {
-            handleUpdateBook(id, values);
-          } else {
-            handleAddBook(values);
-            console.log(values);
-          }
-          if (setIsEditable) {
-            setIsEditable(false);
-          }
-        }}
+        onSubmit={(values) => handleOnSubmit(values)}
       >
         {({ handleChange, values, handleSubmit }) => (
           <View>

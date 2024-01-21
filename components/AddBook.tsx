@@ -10,8 +10,8 @@ interface AddBookProps {
 export const AddBook = ({ setIsModalVisible }: AddBookProps) => {
   return (
     <View style={styles.container}>
-      <Overlay onPress={() => setIsModalVisible(false)} />
       <View style={styles.modalContainer}>
+        <Overlay onPress={() => setIsModalVisible(false)} />
         <TouchableOpacity onPress={() => setIsModalVisible(false)}>
           <Fontisto name="close-a" size={28} color="#fff" />
         </TouchableOpacity>
@@ -22,7 +22,12 @@ export const AddBook = ({ setIsModalVisible }: AddBookProps) => {
             }}
             style={styles.image}
           />
-          <BookForm bookDetails={null} isEditable={true} setIsEditable={null} />
+          <BookForm
+            bookDetails={null}
+            isEditable={true}
+            setIsEditable={null}
+            setIsModalVisible={setIsModalVisible}
+          />
         </View>
       </View>
     </View>

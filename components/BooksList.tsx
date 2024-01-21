@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { FlatList, Modal, StyleSheet, Text, View } from "react-native";
 import { Book, BookItem, ItemProps } from "./BookItem";
 import { BookDetails } from "./BookDetails";
+import { fetchBooks } from "../services";
 
 interface BookListProps {
   fetchBookList: boolean;
@@ -10,18 +11,14 @@ interface BookListProps {
 export const BooksList = ({ fetchBookList }: BookListProps) => {
   const [books, setBooks] = useState([]);
   const [selectedBookId, setSelectedBookId] = useState<null | string>(null);
-  console.log(selectedBookId);
 
-  const fetchBooks = async () => {
+  const getBooks = async () => {
     try {
-      const res = await fetch(
-        "https://us-central1-bubbo-88234.cloudfunctions.net/app/books",
-        { method: "GET" }
-      );
-      if (res.ok) {
-        const response = await res.json();
-        setBooks(response.data);
-        console.log("fetching fetchBooks");
+      const response = await fetchBooks();
+      if (response.ok) {
+        const responseData = await response.json();
+        setBooks(responseData.data);
+        console.log("fetching getBooks");
       } else {
         console.error("Error fetching books");
       }
@@ -35,7 +32,7 @@ export const BooksList = ({ fetchBookList }: BookListProps) => {
   };
 
   useEffect(() => {
-    fetchBooks();
+    getBooks();
   }, [selectedBookId, fetchBookList]);
 
   return (
