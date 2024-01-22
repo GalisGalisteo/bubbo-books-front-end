@@ -13,7 +13,9 @@ import { useEffect, useState } from "react";
 import { Book } from "./BookItem";
 import { Fontisto } from "@expo/vector-icons";
 import { BookForm } from "./BookForm";
-import { fetchBookById, fetchDeleteBook } from "../services";
+import { fetchBookById, fetchDeleteBook } from "../../services";
+import { UploadImage } from "./UploadImage";
+import { Overlay } from "./Overlay";
 
 export interface BookDetails {
   id?: string;
@@ -75,7 +77,7 @@ export const BookDetails = ({
   }, [selectedBookId]);
 
   if (!bookDetails) {
-    return;
+    return null; // alert error
   }
 
   const { id, author, title, summary, yearPublished, genre, isbn, image } =
@@ -83,16 +85,12 @@ export const BookDetails = ({
 
   return (
     <View style={styles.item}>
+      <Overlay onPress={() => setSelectedBookId(null)} />
       <TouchableOpacity onPress={() => setSelectedBookId(null)}>
         <Fontisto name="close-a" size={24} color="black" />
       </TouchableOpacity>
       <Text style={{ fontSize: 40 }}>{title}</Text>
-      <Image
-        source={{
-          uri: image,
-        }}
-        style={styles.image}
-      />
+
       <BookForm
         bookDetails={{
           id,
@@ -102,6 +100,7 @@ export const BookDetails = ({
           yearPublished,
           genre,
           isbn,
+          image,
         }}
         isEditable={editable}
         setIsEditable={setEditable}
@@ -146,7 +145,7 @@ const styles = StyleSheet.create({
     marginTop: 80,
   },
   image: {
-    width: 300,
-    height: 300,
+    width: "100%",
+    aspectRatio: 1,
   },
 });

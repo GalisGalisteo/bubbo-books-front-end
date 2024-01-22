@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { FlatList, Modal, StyleSheet, Text, View } from "react-native";
 import { Book, BookItem, ItemProps } from "./BookItem";
 import { BookDetails } from "./BookDetails";
-import { fetchBooks } from "../services";
+import { fetchBooks } from "../../services";
 
 interface BookListProps {
   fetchBookList: boolean;

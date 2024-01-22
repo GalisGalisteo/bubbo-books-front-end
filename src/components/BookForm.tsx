@@ -1,22 +1,16 @@
 import { Formik } from "formik";
-import { Button, StyleSheet, Text, TextInput, View } from "react-native";
+import { Button, Image, StyleSheet, Text, TextInput, View } from "react-native";
 import { BookDetails } from "./BookDetails";
-import { fetchAddBook, fetchUpdateBook } from "../services";
+import { emptyImage, fetchAddBook, fetchUpdateBook } from "../../services";
+import { UploadImage } from "./UploadImage";
+import { useState } from "react";
 
 interface BookFormProps {
   bookDetails: BookDetails | null;
   isEditable: boolean;
   setIsEditable: React.Dispatch<React.SetStateAction<boolean>> | null;
   setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>> | null;
-}
-
-interface Values {
-  author: string;
-  title: string;
-  summary: string;
-  yearPublished: string;
-  genre: string;
-  isbn: string;
+  //  uploadedImage: string;
 }
 
 export const BookForm = ({
@@ -24,9 +18,14 @@ export const BookForm = ({
   isEditable,
   setIsEditable,
   setIsModalVisible,
-}: BookFormProps) => {
-  const { id, author, title, summary, yearPublished, genre, isbn } =
+}: //uploadedImage,
+BookFormProps) => {
+  const [uploadedImage, setUploadedImage] = useState<string>(
+    bookDetails?.image || emptyImage
+  );
+  let { id, author, title, summary, yearPublished, genre, isbn } =
     bookDetails || {};
+  console.log("uploadedImage in BookForm", uploadedImage);
 
   const initialValues = {
     author: author ?? "",
@@ -35,6 +34,7 @@ export const BookForm = ({
     yearPublished: yearPublished ?? "",
     genre: genre ?? "",
     isbn: isbn ?? "",
+    image: uploadedImage,
   };
 
   const handleAddBook = async (data: BookDetails) => {
@@ -69,10 +69,11 @@ export const BookForm = ({
     }
   };
 
-  const handleOnSubmit = async (values: Values) => {
+  const handleOnSubmit = async (values: BookDetails) => {
     try {
       if (bookDetails) {
         await handleUpdateBook(id, values);
+        console.log(values);
       } else {
         await handleAddBook(values);
         console.log(values);
@@ -91,9 +92,20 @@ export const BookForm = ({
 
   return (
     <View>
+      <Image
+        source={{
+          uri: uploadedImage,
+        }}
+        style={styles.image}
+      />
+      {isEditable ? <UploadImage setUploadedImage={setUploadedImage} /> : null}
       <Formik
         initialValues={initialValues}
-        onSubmit={(values) => handleOnSubmit(values)}
+        onSubmit={(values) => {
+          values.image = uploadedImage; // test without this line
+          console.log("onSubmitValues", values.image);
+          return handleOnSubmit(values);
+        }}
       >
         {({ handleChange, values, handleSubmit }) => (
           <View>
@@ -191,6 +203,10 @@ const styles = StyleSheet.create({
   borderEditable: {
     borderWidth: 1,
     borderColor: "#999",
+  },
+  image: {
+    width: "100%",
+    aspectRatio: 1,
   },
 });
 

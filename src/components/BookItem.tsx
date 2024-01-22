@@ -1,5 +1,6 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
+import { emptyImage } from "../../services";
 
 export interface Book {
   id: string;
@@ -21,7 +22,7 @@ export const BookItem = ({ item, pressHandler }: ItemProps) => {
       <View style={styles.item}>
         <Image
           source={{
-            uri: item.image,
+            uri: item.image || emptyImage,
           }}
           style={styles.image}
         />

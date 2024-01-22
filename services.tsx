@@ -1,4 +1,7 @@
-import { BookDetails } from "./components/BookDetails";
+import { BookDetails } from "./src/components/BookDetails";
+
+export const emptyImage =
+  "/Users/galis/Library/Mobile Documents/com~apple~CloudDocs/PROGRAMACION/Pruebas-tecnicas/bubbo/bubbo-front-end/assets/empty-image.jpeg";
 
 export const fetchBooks = async () => {
   const response = await fetch(
