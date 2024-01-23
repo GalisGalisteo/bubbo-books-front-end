@@ -17,7 +17,7 @@ export interface Book {
 }
 
 export const emptyImage =
-  "/Users/galis/Library/Mobile Documents/com~apple~CloudDocs/PROGRAMACION/Pruebas-tecnicas/bubbo/bubbo-front-end/assets/images/empty-image.jpeg";
+  "https://res.cloudinary.com/dfqoeq3s7/image/upload/v1705860996/empty-image_zwtfon.jpg";
 
 export const fetchBooks = async () => {
   const response = await fetch(

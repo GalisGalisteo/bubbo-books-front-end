@@ -8,6 +8,7 @@ import {
   View,
 } from "react-native";
 import { Formik } from "formik";
+import * as yup from "yup";
 import { UploadImage } from "./UploadImage";
 import { CustomButton } from "./CustomButton";
 import {
@@ -16,6 +17,14 @@ import {
   fetchAddBook,
   fetchUpdateBook,
 } from "../services";
+
+const reviewSchema = yup.object({
+  author: yup.string().required(),
+  title: yup.string().required(),
+  yearPublished: yup.number().required().min(1000).max(2024),
+  genre: yup.string().required(),
+  isbn: yup.number().required(),
+});
 
 interface BookFormProps {
   bookDetails: BookDetailsInterface | null;
@@ -123,13 +132,13 @@ export const BookForm = ({
       ) : null}
       <Formik
         initialValues={initialValues}
+        validationSchema={reviewSchema}
         onSubmit={(values) => {
-          values.image = uploadedImage; // test without this line
-          console.log("onSubmitValues", values.image);
+          values.image = uploadedImage;
           return handleOnSubmit(values);
         }}
       >
-        {({ handleChange, values, handleSubmit }) => (
+        {({ handleChange, values, handleSubmit, errors, touched }) => (
           <View style={styles.formContainer}>
             <View style={styles.inputContainer}>
               <Text style={styles.inputTitle}>Author: </Text>
@@ -157,6 +166,8 @@ export const BookForm = ({
               <Text style={styles.inputTitle}>Year published: </Text>
               <TextInput
                 keyboardType="number-pad"
+                inputMode="numeric"
+                maxLength={4}
                 editable={isEditable}
                 style={isEditableStyles(isEditable)}
                 placeholder="e.g. 1982"
@@ -178,6 +189,8 @@ export const BookForm = ({
               <Text style={styles.inputTitle}>ISBN: </Text>
               <TextInput
                 keyboardType="number-pad"
+                inputMode="numeric"
+                maxLength={13}
                 editable={isEditable}
                 style={isEditableStyles(isEditable)}
                 placeholder="1234567890123"
@@ -185,6 +198,15 @@ export const BookForm = ({
                 value={values.isbn}
               />
             </View>
+            <Text style={{ color: "red" }}>
+              {touched.author && errors.author && `${errors.author}, `}
+              {touched.title && errors.title && `${errors.title}, `}
+              {touched.author &&
+                errors.yearPublished &&
+                `${errors.yearPublished}, `}
+              {touched.author && errors.genre && `${errors.genre}, `}
+              {touched.author && errors.isbn && `${errors.isbn}.`}
+            </Text>
             {isEditable ? (
               <View style={styles.buttonsContainer}>
                 <CustomButton
@@ -211,6 +233,7 @@ const styles = StyleSheet.create({
     width: "100%",
     aspectRatio: 1 / 1.3,
     borderRadius: 10,
+    marginBottom: 7,
   },
   formContainer: {
     gap: 4,
