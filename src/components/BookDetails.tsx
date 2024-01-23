@@ -53,7 +53,6 @@ export const BookDetails = ({
       const response = await fetchDeleteBook(id);
       if (response.ok) {
         const responseData = await response.json();
-        console.log(responseData);
         console.log("fetching handleDeleteBook");
       } else {
         console.error("Error deleting book");
@@ -83,14 +82,10 @@ export const BookDetails = ({
   };
 
   useEffect(() => {
-    if (selectedBookId) {
-      fetchBookDetails(selectedBookId);
-    }
+    selectedBookId && fetchBookDetails(selectedBookId);
   }, [selectedBookId]);
 
-  if (!bookDetails) {
-    return null;
-  }
+  if (!bookDetails) return null;
 
   const { id, author, title, summary, yearPublished, genre, isbn, image } =
     bookDetails;

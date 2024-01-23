@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "bubbo-front-end",
-    "slug": "bubbo-front-end",
+    "slug": "bubbo-books",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -25,6 +25,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "fba5ddac-25e3-4ebc-953d-2d6de892ade6"
+      }
+    },
+    "owner": "galisgalisteo"
   }
 }

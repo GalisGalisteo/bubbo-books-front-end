@@ -5,12 +5,14 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { UploadImage } from "./UploadImage";
 import { CustomButton } from "./CustomButton";
+import { Feather } from "@expo/vector-icons";
 import {
   BookDetailsInterface,
   emptyImage,
@@ -19,11 +21,24 @@ import {
 } from "../services";
 
 const reviewSchema = yup.object({
-  author: yup.string().required(),
-  title: yup.string().required(),
-  yearPublished: yup.number().required().min(1000).max(2024),
-  genre: yup.string().required(),
-  isbn: yup.number().required(),
+  author: yup.string().required("Author is required"),
+  title: yup.string().required("Title is required"),
+  yearPublished: yup
+    .number()
+    .typeError("Year published must be a number")
+    .required("Year published is required")
+    .min(1000, "Year published is too low")
+    .max(new Date().getFullYear(), "Year published can't be in the future!"),
+  genre: yup.string().required("Genre is required"),
+  isbn: yup
+    .number()
+    .typeError("ISBN must be a number")
+    .required("ISBN is required")
+    .test(
+      "numberDigits",
+      "ISBN must be 10-13 digits long",
+      (num) => num.toString().length >= 11 && num.toString().length <= 14
+    ),
 });
 
 interface BookFormProps {
@@ -103,26 +118,42 @@ export const BookForm = ({
     } catch (error) {
       console.error("An error occurred:", error);
     } finally {
-      if (setIsEditable) setIsEditable(false);
-      if (setIsModalVisible) setIsModalVisible(false);
+      setIsEditable && setIsEditable(false);
+      setIsModalVisible && setIsModalVisible(false);
     }
   };
 
   const handleCancelButton = () => {
-    if (setIsModalVisible) setIsModalVisible(false);
-    if (setSelectedBookId) setSelectedBookId(null);
+    setIsModalVisible && setIsModalVisible(false);
+    setSelectedBookId && setSelectedBookId(null);
   };
 
   return (
     <View>
-      <TouchableOpacity onPress={() => setIsUploadModalVisible(true)}>
-        <Image
-          source={{
-            uri: uploadedImage,
-          }}
-          style={styles.image}
-        />
-      </TouchableOpacity>
+      <TouchableWithoutFeedback
+        onPress={() => (isEditable ? setIsUploadModalVisible(true) : null)}
+      >
+        <View style={{ justifyContent: "center", alignItems: "center" }}>
+          <Image
+            source={{
+              uri: uploadedImage,
+            }}
+            style={styles.image}
+          />
+          {isEditable ? (
+            <View
+              style={{
+                position: "absolute",
+                backgroundColor: "rgba(0, 0, 0, 0.7)",
+                borderRadius: 6,
+                padding: 6,
+              }}
+            >
+              <Feather name="upload" size={36} color="#fff" />
+            </View>
+          ) : null}
+        </View>
+      </TouchableWithoutFeedback>
       {isUploadModalVisible ? (
         <UploadImage
           setUploadedImage={setUploadedImage}
