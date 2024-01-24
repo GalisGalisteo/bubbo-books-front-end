@@ -41,7 +41,6 @@ export const UploadImage = ({
         };
         await handleUpload(newFile);
         setIsUploadModalVisible(false);
-        console.log(newFile);
       }
     } catch (error) {
       if (error instanceof Error) {

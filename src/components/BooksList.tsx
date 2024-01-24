@@ -37,14 +37,13 @@ export const BooksList = ({ fetchBookList }: BookListProps) => {
 
   return (
     <View>
-      <View>
-        <FlatList
-          data={books}
-          renderItem={({ item }) => (
-            <BookItem item={item} pressHandler={pressHandler} />
-          )}
-        />
-      </View>
+      <FlatList
+        data={books}
+        renderItem={({ item }) => (
+          <BookItem item={item} pressHandler={pressHandler} />
+        )}
+        ListFooterComponent={<View style={{ height: 200 }}></View>}
+      />
       <Modal visible={selectedBookId !== null} transparent animationType="fade">
         <BookDetails
           selectedBookId={selectedBookId}

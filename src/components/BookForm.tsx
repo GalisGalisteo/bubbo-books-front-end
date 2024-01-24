@@ -110,10 +110,8 @@ export const BookForm = ({
     try {
       if (bookDetails) {
         await handleUpdateBook(id, values);
-        console.log(values);
       } else {
         await handleAddBook(values);
-        console.log(values);
       }
     } catch (error) {
       console.error("An error occurred:", error);

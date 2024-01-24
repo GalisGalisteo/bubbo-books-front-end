@@ -1,17 +1,8 @@
+import { useState } from "react";
+import { Modal, StyleSheet, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import {
-  Button,
-  Modal,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
 import { Header } from "./src/components/Header";
 import { BooksList } from "./src/components/BooksList";
-import { BookForm } from "./src/components/BookForm";
-import { useState } from "react";
-import { Overlay } from "./src/components/Overlay";
 import { AddBook } from "./src/components/AddBook";
 import { Footer } from "./src/components/Footer";
 
@@ -21,19 +12,22 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Header />
-      <View style={styles.content}>
-        <Modal visible={isModalVisible} transparent animationType="slide">
-          <AddBook setIsModalVisible={setIsModalVisible} />
-        </Modal>
-        <View style={styles.list}>
-          <BooksList fetchBookList={!isModalVisible} />
-        </View>
+      <View style={{}}>
+        <BooksList fetchBookList={!isModalVisible} />
+      </View>
+
+      <View style={styles.footer}>
         <Footer
           onPress={() => {
             setIsModalVisible(true);
           }}
         />
       </View>
+
+      <Modal visible={isModalVisible} transparent animationType="slide">
+        <AddBook setIsModalVisible={setIsModalVisible} />
+      </Modal>
+
       <StatusBar style="auto" />
     </View>
   );
@@ -44,11 +38,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
-  content: {
-    backgroundColor: "transparent",
-    flex: 1,
-  },
-  list: {
-    flex: 1,
+  footer: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1,
   },
 });

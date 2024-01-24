@@ -18,5 +18,6 @@ const styles = StyleSheet.create({
     height: 85,
     paddingTop: 15,
     alignItems: "center",
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
   },
 });
