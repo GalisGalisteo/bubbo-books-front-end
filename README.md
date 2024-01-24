@@ -55,7 +55,7 @@ When you already install all the dependencies, you should run the next command:
 npm start
 ```
 
-[Here](LIKK) you can find a video explaining the app's functionality.
+[Here](https://www.veed.io/view/26d46b96-d0a8-4b9e-a37b-bf938ff848a8?panel=share) you can find a video explaining the app's functionality.
 
 ### Contributing
 
